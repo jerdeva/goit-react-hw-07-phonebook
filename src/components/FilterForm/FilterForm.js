@@ -1,18 +1,19 @@
 import React from 'react';
 import Wrapper from './FormList.styled';
 import { LabelSt, InputSt } from './FormList.styled';
-
+import { selectContacts, selectFilter } from 'redux/selectors';
 import { useDispatch, useSelector } from 'react-redux';
 import { setContactsFilter } from 'redux/filterSlice';
-import { getContacts, getFilter } from 'redux/store';
+// import { getContacts, getFilter } from 'redux/store';
 
 
 
 export function FilterForm ()  {
   const dispatch = useDispatch();
+  const filter = useSelector(selectFilter)
 
      const searchContact = event => {
-    dispatch(setContactsFilter(event.target.value));
+    dispatch(setContactsFilter(event.target.value.trim()));
   };
 
   return (
@@ -24,9 +25,9 @@ export function FilterForm ()  {
           name="filter"
           type="text"
           placeholder="Enter name"
-          value={useSelector(getFilter)}
+          value={filter}
           onChange={searchContact}
-          disabled={useSelector(getContacts).length === 0}
+          disabled={useSelector(selectContacts).length === 0}
         />
       </LabelSt>
     </Wrapper>

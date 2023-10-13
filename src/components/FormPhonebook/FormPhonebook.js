@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addContact } from '../../redux/contactsSlice';
+import { addContact } from '../../redux/operations';
+import { selectContacts } from '../../redux/selectors';
 import {
   BtnStyle,
   FormPhB,
@@ -11,48 +12,55 @@ import {
 
 export function FormPhonebook() {
   const dispatch = useDispatch();
-  const contacts = useSelector(state => state.contacts);
-
+  const contacts = useSelector(selectContacts);
   const [name, setName] = useState('');
-  const [number, setNumber] = useState('');
+  const [phone, setPhone] = useState('');
 
-  const handleNameChange = event => {
-    setName(event.target.value);
+const handleSubmit = event => {
+  event.preventDefault();
+
+  const contact = {
+    name: name,
+    phone: phone,
   };
 
-  const handleNumberChange = event => {
-    setNumber(event.target.value);
-  };
+  const isContactExist = contacts.find(
+    ({ name }) => name.toLowerCase() === contact.name.toLowerCase()
+  );
 
-  const handleSubmit = event => {
-    event.preventDefault();
+  if (isContactExist) {
+   window.alert(`phone ${contact.name} is already in contacts!`);
+    return;
+  }
 
-    if (name.trim() === '' || number.trim() === '') {
-      return;
+const isphoneExist = contacts.find(
+  ({ phone }) => {
+    if (contact.phone && typeof contact.phone === 'string' && phone) {
+      return contact.phone.replace(/\D/g, '') === phone.replace(/\D/g, '');
     }
+    return false; 
+  }
+  );
 
-    const isNameExist = contacts.find(
-      contact => contact.name.toLowerCase() === name.toLowerCase()
+  if (isphoneExist) {
+   window.alert(
+      `phone ${contact.phone} is already in contacts!`
     );
+    return;
+  }
 
-    if (isNameExist) {
-      window.alert(`Contact with name ${name} already exists!`);
-      return;
-    }
+  dispatch(addContact(contact));
+  setName('');
+  setPhone('');
+};
 
-    const isNumberExist = contacts.find(
-      contact => contact.number.replace(/\D/g, '') === number.replace(/\D/g, '')
-    );
+const handleNameChange = event => {
+  setName(event.target.value);
+};
 
-    if (isNumberExist) {
-      window.alert(`Number ${number} is already in contacts!`);
-      return;
-    }
-
-    dispatch(addContact(name, number));
-    setName('');
-    setNumber('');
-  };
+const handlephoneChange = event => {
+  setPhone(event.target.value);
+};
 
   return (
     <Wrapper>
@@ -68,15 +76,15 @@ export function FormPhonebook() {
           value={name}
           onChange={handleNameChange}
         />
-        <LabelStyle>Number</LabelStyle>
+        <LabelStyle>phone</LabelStyle>
         <InputSt
           type="tel"
-          name="number"
+          name="phone"
           pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
-          title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
+          title="Phone phone must be digits and can contain spaces, dashes, parentheses and can start with +"
           required
-          value={number}
-          onChange={handleNumberChange}
+          value={phone}
+          onChange={handlephoneChange}
         />
 
         <BtnStyle type="submit">Add contact</BtnStyle>

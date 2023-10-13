@@ -1,6 +1,6 @@
 // import Wrapper from './ContactInfo.styled'
 import { useDispatch } from 'react-redux';
-import { deleteContact } from '../../redux/contactsSlice';
+import { deleteContact } from '../../redux/operations';
 // import { BsXCircleFill } from "react-icons/bs";
 import {
   ButtonStyle,
@@ -16,9 +16,9 @@ import { ReactComponent as Delete } from '../icons/Delete.svg';
 function ContactInfo({ contact }) {
   const dispatch = useDispatch();
 
-  const deliteContacts = () => {
-    dispatch(deleteContact(contact.id))
-  }
+  const handleDelete = () => {
+    dispatch(deleteContact(contact.id));
+  };
 
   return (
     <ItemsStyled>
@@ -28,9 +28,9 @@ function ContactInfo({ contact }) {
       </Paragrapher>
       <Paragrapher>
         <Span>Number: </Span>
-         {contact.number}
+        {contact.phone}
       </Paragrapher>
-      <ButtonStyle onClick={deliteContacts}>
+      <ButtonStyle onClick={handleDelete}>
         {/* <BsXCircleFill />         */}
         <Delete />
       </ButtonStyle>
