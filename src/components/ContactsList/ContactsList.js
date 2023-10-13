@@ -26,7 +26,7 @@ export function ContactsList() {
       {isLoading && !error ? (
         <p>please waite</p>
       ) : filtredContacts.length === 0 && !error ? (
-        <p>The Phonebook is empty. Add your first contact. 🫤</p>
+        <p>The Phonebook is empty. Add your contacts.</p>
       ) : (
         filtredContacts.map(({ id, name, phone, number }) => (
           <ContactInfo key={id} contact={{ id, name, number , phone}} />
